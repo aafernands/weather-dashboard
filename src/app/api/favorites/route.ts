@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/app/lib/prisma.ts";
 import { authOptions } from "@/app/lib/server-auth-options.ts";
 
 // 🟢 GET /api/favorites
