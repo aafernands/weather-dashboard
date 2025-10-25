@@ -1,4 +1,4 @@
-import FeatureCards from "@/components/site/FeatureCards";
+import FeatureCards from "@/components/FeatureCards";
 import Link from "next/link";
 
 export default function FeaturesPage() {

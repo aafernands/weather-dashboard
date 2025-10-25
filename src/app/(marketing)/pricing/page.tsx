@@ -1,4 +1,4 @@
-import PricingTable from "@/components/site/PricingTable";
+import PricingTable from "@/components/PricingTable";
 import Link from "next/link";
 
 export default function PricingPage() {

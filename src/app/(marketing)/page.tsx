@@ -1,6 +1,6 @@
-import Hero from "@/components/site/Hero";
-import FeatureCards from "@/components/site/FeatureCards";
-import PricingTable from "@/components/site/PricingTable";
+import Hero from "@/components/Hero";
+import FeatureCards from "@/components/FeatureCards";
+import PricingTable from "@/components/PricingTable";
 
 export default function HomePage() {
   return (

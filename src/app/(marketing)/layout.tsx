@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/site/Navbar";
-import Footer from "@/components/site/Footer";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "AlxWeather — Simple, fast weather insights",
