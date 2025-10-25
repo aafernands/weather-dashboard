@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
-import { authOptions } from "@/lib/server-auth-options";
+import { authOptions } from "@/app/lib/server-auth-options.ts";
 
 // 🟢 GET /api/favorites
 // Return all favorites for the logged-in user
