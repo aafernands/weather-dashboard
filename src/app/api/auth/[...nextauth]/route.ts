@@ -2,7 +2,7 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "lib/schema.prisma"; // <-- make sure this file exists
+import { prisma } from "../../../lib/prisma"; // <-- make sure this file exists
 import { compare } from "bcrypt";
 import { z } from "zod";
 
