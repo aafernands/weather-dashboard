@@ -1,43 +1,62 @@
-import NextAuth from "next-auth";
+// src/app/api/auth/[...nextauth]/route.ts
+import NextAuth, { type NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { prisma } from "@/app/lib/prisma/schema.prisma"; // <-- make sure this file exists
 import { compare } from "bcrypt";
 import { z } from "zod";
-
-const prisma = new PrismaClient();
 
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
 });
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
+  // If you want DB-backed sessions, keep "database" + adapter.
+  // If you prefer stateless, change to: session: { strategy: "jwt" } and remove the adapter.
+  adapter: PrismaAdapter(prisma),
   session: { strategy: "database" },
+  secret: process.env.NEXTAUTH_SECRET,
+
   providers: [
     Credentials({
       name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
       async authorize(creds) {
         const parsed = loginSchema.safeParse(creds);
         if (!parsed.success) return null;
+
         const { email, password } = parsed.data;
 
         const user = await prisma.user.findUnique({ where: { email } });
-        if (!user) return null;
+        if (!user || !user.passwordHash) return null;
+
         const ok = await compare(password, user.passwordHash);
         if (!ok) return null;
 
-        return { id: user.id, email: user.email, name: user.name };
+        // Minimal safe object; NextAuth will persist via adapter
+        return { id: user.id, email: user.email, name: user.name ?? null };
       },
     }),
   ],
+
+  pages: {
+    signIn: "/login",
+  },
+
   callbacks: {
-    async session({ session, user, token }) {
-      // NextAuth will inject DB session if using Prisma adapter; keep minimal
+    async session({ session, user }) {
+      // Include user.id for convenience
+      if (session.user && user?.id) {
+        (session.user as any).id = user.id;
+      }
       return session;
     },
   },
-  // You can wire the Prisma Adapter if you prefer session tables auto-managed:
-  // adapter: PrismaAdapter(prisma),
-});
+};
 
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
