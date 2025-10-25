@@ -8,3 +8,5 @@ out/
 # env & system
 .env*
 .DS_Store
+
+/generated/prisma
